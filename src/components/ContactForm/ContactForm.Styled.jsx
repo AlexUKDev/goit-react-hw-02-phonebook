@@ -1,29 +1,29 @@
 import styled from 'styled-components';
 
-export const PhonebookForm = styled.form`
+export const FormWrap = styled.form`
   display: flex;
   flex-direction: column;
 
   margin-top: 18px;
-  padding: 20px;
-  border: 1px solid tomato;
+  padding: 30px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
   border-radius: 8px;
 `;
 
-export const PhonebookLable = styled.label`
+export const Lable = styled.label`
   display: flex;
   flex-direction: column;
   font-size: 18px;
   margin-top: 10px;
 `;
-export const PhonebookInput = styled.input`
-  width: 200px;
+export const Input = styled.input`
+  width: 350px;
   height: 35px;
   border: solid rgba(0, 0, 0, 0.2);
   border-radius: 8px;
 `;
 
-export const PhonebookSubBtn = styled.button`
+export const SubmitBtn = styled.button`
   margin-top: 15px;
   width: 100%;
   height: 40px;
@@ -37,7 +37,6 @@ export const PhonebookSubBtn = styled.button`
 
   &:hover {
     cursor: pointer;
-    background-color: green;
     background-color: #54b95f;
     scale: 0.994;
   }

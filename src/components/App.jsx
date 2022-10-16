@@ -1,7 +1,10 @@
 import { Component } from 'react';
-import { Form } from './phonebookForm/phonebookForm';
-import { nanoid } from 'nanoid';
-import { PhonebookContactsList } from './phonebookContactsList/phonebookContactsList';
+import { ContactForm } from './ContactForm/ContactForm';
+import { SectionTitle } from './SectionTitle/SectionTitle';
+import { Filter } from './Filter/Filter';
+import { Notify } from 'notiflix';
+
+import { ContactsList } from './ContactList/ContactList';
 export class App extends Component {
   state = {
     contacts: [
@@ -10,23 +13,43 @@ export class App extends Component {
       { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
+    filter: '',
   };
 
-  getFormState = data => {
-    const { name, number } = data;
+  addNewContact = NewContact => {
+    // Сhecking if there is a contact with that name in the state
+    for (const contactItem of this.state.contacts) {
+      if (NewContact.name === contactItem.name) {
+        return Notify.warning(`${NewContact.name}, is alredy in contacts!'`);
+      }
+    }
+    //Adding a new contact to the state
     this.setState(prevState => ({
-      contacts: [
-        ...prevState.contacts,
-        {
-          id: nanoid(),
-          name: { name },
-          number: { number },
-        },
-      ],
+      contacts: [...prevState.contacts, NewContact],
+    }));
+    Notify.success(`Contact ${NewContact.name}, successfully added`);
+  };
+  changeFilterValue = e => {
+    this.setState({ filter: e.currentTarget.value });
+  };
+  getFiltredContacts = () => {
+    const { filter, contacts } = this.state;
+    const normalizeFilterValue = filter.toLowerCase();
+
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizeFilterValue)
+    );
+  };
+
+  contactDelete = contactId => {
+    // console.log(contactId);
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
     }));
   };
 
   render() {
+    const visibleContacts = this.getFiltredContacts();
     return (
       <div
         style={{
@@ -39,12 +62,20 @@ export class App extends Component {
           color: '#010101',
         }}
       >
-        <Form sendSubmitData={this.getFormState} />
-        <PhonebookContactsList contacts={this.state.contacts} />
+        <SectionTitle title={'Phoneboock'} />
+        <ContactForm sendNewContact={this.addNewContact} />
+
+        <SectionTitle title={'Contacts'} />
+        <Filter
+          lableText={'Find contacts by name'}
+          value={this.state.filter}
+          onChange={this.changeFilterValue}
+        />
+        <ContactsList
+          contacts={visibleContacts}
+          contactDelete={this.contactDelete}
+        />
       </div>
     );
   }
 }
-
-// import { nanoid } from 'nanoid'
-// model.id = nanoid() //=> "V1StGXR8_Z5jdHi6B-myT"

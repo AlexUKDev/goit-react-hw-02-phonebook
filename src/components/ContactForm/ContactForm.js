@@ -1,11 +1,9 @@
 import { Component } from 'react';
-import {
-  PhonebookForm,
-  PhonebookLable,
-  PhonebookSubBtn,
-  PhonebookInput,
-} from './phonebookForm.Styled';
-export class Form extends Component {
+import { FormWrap, Lable, SubmitBtn, Input } from './ContactForm.Styled';
+import { nanoid } from 'nanoid';
+import PropTypes from 'prop-types';
+
+export class ContactForm extends Component {
   state = {
     name: '',
     number: '',
@@ -20,7 +18,16 @@ export class Form extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.sendSubmitData(this.state);
+
+    const newContactId = nanoid();
+    const createNewContact = {
+      id: newContactId,
+      name: this.state.name,
+      number: this.state.number,
+    };
+
+    this.props.sendNewContact(createNewContact);
+
     this.setState({
       name: '',
       number: '',
@@ -29,10 +36,10 @@ export class Form extends Component {
 
   render() {
     return (
-      <PhonebookForm onSubmit={this.handleSubmit}>
-        <PhonebookLable>
+      <FormWrap onSubmit={this.handleSubmit}>
+        <Lable>
           Name
-          <PhonebookInput
+          <Input
             type="text"
             name="name"
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
@@ -41,10 +48,10 @@ export class Form extends Component {
             value={this.state.name}
             onChange={this.handleInputChange}
           />
-        </PhonebookLable>
-        <PhonebookLable>
+        </Lable>
+        <Lable>
           Number
-          <PhonebookInput
+          <Input
             type="tel"
             name="number"
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
@@ -53,9 +60,13 @@ export class Form extends Component {
             value={this.state.number}
             onChange={this.handleInputChange}
           />
-        </PhonebookLable>
-        <PhonebookSubBtn type="submit">Add contact</PhonebookSubBtn>
-      </PhonebookForm>
+        </Lable>
+        <SubmitBtn type="submit">Add contact</SubmitBtn>
+      </FormWrap>
     );
   }
 }
+
+ContactForm.propTypes = {
+  sendNewContact: PropTypes.func.isRequired,
+};
